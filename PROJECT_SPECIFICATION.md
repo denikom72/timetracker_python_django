@@ -1,4 +1,4 @@
-# Project Specification: AI-Powered Time Tracker (V2)
+# Project Specification: Time Tracker (V2)
 
 ## 1. Project Overview
 
@@ -522,7 +522,7 @@ Tasks / Subtasks:
 
     DEV-402.6 Manual QA checklist
 
- Now you have a complete Jira-ready roadmap:
+ This should be a Jira-Ready roadmap:
 
     Strong acceptance criteria for all edge cases
 

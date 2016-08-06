@@ -1,0 +1,58 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.9, "3.10", "3.11"]
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_DB: gemini
+          POSTGRES_USER: gemini
+          POSTGRES_PASSWORD: gemini
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install django psycopg2-binary
+    - name: Run Tests
+      env:
+        SECRET_KEY: test-secret-key
+        DEBUG: "True"
+        DATABASE_URL: postgres://gemini:gemini@localhost:5432/gemini
+      run: |
+        python timetracker/manage.py test tracker
+    - name: Install Playwright Browsers
+      run: playwright install chromium
+    - name: Run Frontend Tests
+      env:
+        SECRET_KEY: test-secret-key
+        DEBUG: "True"
+        DATABASE_URL: postgres://gemini:gemini@localhost:5432/gemini
+      run: |
+        pytest --base-url http://localhost:8000 timetracker/features/

@@ -1,0 +1,48 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+    <h2>Time History for {{ managed_user.username }}</h2>
+    <a href="{% url 'team_timesheet' %}" class="btn btn-secondary mb-3">Back to Team Timesheet</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Check-in Time</th>
+                <th>Check-out Time</th>
+                <th>Duration (hours)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in page_obj %}
+                <tr>
+                    <td>{{ entry.check_in_time }}</td>
+                    <td>{{ entry.check_out_time|default:"-" }}</td>
+                    <td>
+                        {% if entry.check_out_time %}
+                            {{ entry.duration|floatformat:2 }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td><a href="{% url 'edit_time_entry' entry.id %}" class="btn btn-sm btn-warning">Edit</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a></li>
+            {% endif %}
+
+            <li class="page-item disabled"><a class="page-link" href="#">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</a></li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}

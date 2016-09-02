@@ -67,6 +67,20 @@ To run the unit tests for the `tracker` app, use the following command:
 python3 manage.py test tracker
 ```
 
+### Running End-to-End Tests
+
+To run the Playwright E2E tests, first ensure you have the necessary browser binaries installed:
+
+```bash
+playwright install
+```
+
+Then, run the tests using pytest:
+
+```bash
+pytest features/test_login.py
+```
+
 ---
 
 ## Project Roadmap

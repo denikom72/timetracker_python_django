@@ -1,0 +1,23 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+    <h2>Team Weekly Timesheet</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Hours This Week</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in timesheet_data %}
+                <tr>
+                    <td>{{ data.user.username }}</td>
+                    <td>{{ data.weekly_hours|floatformat:2 }}</td>
+                    <td><a href="{% url 'view_user_timesheet' data.user.id %}" class="btn btn-sm btn-info">View/Edit Timesheet</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
